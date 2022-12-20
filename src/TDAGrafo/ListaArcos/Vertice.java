@@ -1,5 +1,6 @@
-package TDAGrafo;
+package TDAGrafo.ListaArcos;
 
+import TDAGrafo.Vertex;
 import TDALista.Position;
 
 public class Vertice<V> implements Vertex<V> {

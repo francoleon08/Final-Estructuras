@@ -2,6 +2,8 @@ package Test;
 
 // Librerías JUNIT
 import static org.junit.Assert.*;
+
+import TDAGrafo.ListaAdyacencias.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +39,7 @@ public class GraphTests {
 	 */
 	@Before
 	public void setUp() {
-		graph = new GrafoListaArcos<Object, Object>(); // cambiar esta línea para probar
+		graph = new GrafoListaAdyacentes<Object, Object>(); // cambiar esta línea para probar
 												// distintas implementaciones
 		o1 = new Object();
 	}

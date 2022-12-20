@@ -1,7 +1,10 @@
-package TDAGrafo;
+package TDAGrafo.ListaArcos;
 
+import TDAGrafo.Edge;
 import TDAGrafo.Exception.InvalidEdgeException;
 import TDAGrafo.Exception.InvalidVertexException;
+import TDAGrafo.Graph;
+import TDAGrafo.Vertex;
 import TDALista.*;
 
 public class GrafoListaArcos<V,E> implements Graph<V,E> {
