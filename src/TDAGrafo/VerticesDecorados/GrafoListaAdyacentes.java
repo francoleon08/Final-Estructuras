@@ -1,7 +1,9 @@
 package TDAGrafo.VerticesDecorados;
 
 import TDAGrafo.Exception.*;
+import TDAGrafo.ListaAdyacencias.Vertice;
 import TDALista.*;
+import TDAMap.InvalidKeyException;
 
 public class GrafoListaAdyacentes<V,E> implements Graph<V,E> {
     protected PositionList<VerticeD<V,E>> vertices;
@@ -157,6 +159,104 @@ public class GrafoListaAdyacentes<V,E> implements Graph<V,E> {
         return toReturn;
     }
 
+    /**
+     * Determina si un grafo es conexo, mediante un recorrido DFS con vertices decorados.
+     * Un grafo es conexo si para todo par de vertices existe un camino entre ellos.
+     * @return TRUE si el grafo es conexo, FALSE caso contrario.
+     */
+    public boolean isConnected() {
+        boolean estado = false;
+        int [] i = {1};
+        try {
+            if(!vertices.isEmpty()) {
+                //Decoro los vertices, 0 no visitado, 1 visitado
+                for(VerticeD<V,E> v : vertices){
+                    v.put("D", "0");
+                }
+                isConnectedDFS(vertices.first().element(), i);
+                estado = (i[0] == vertices.size());
+            }
+        } catch (InvalidKeyException | EmptyListException e) {
+            throw new RuntimeException(e);
+        }
+        return estado;
+    }
+
+    private void isConnectedDFS(Vertex<V> v, int [] i){
+        try {
+            v.put("D", "1");
+            for(Edge<E> a : incidentEdges(v)){
+                Vertex<V> aux = opposite(v, a);
+                if(aux.get("D") == "0"){
+                    i[0]++;
+                    isConnectedDFS(aux, i);
+                }
+            }
+        } catch (InvalidKeyException | InvalidVertexException | InvalidEdgeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Determina si existe un camino entre dos vertices pertenecientes al grafo.
+     * @param v1 vertice 1.
+     * @param v2 vertice 2.
+     * @return TRUE si existe camino, FALSE caso contrario.
+     * @throws InvalidVertexException si v1 o v2 no son nodos validos.
+     */
+    public boolean existeCamino(Vertex<V> v1, Vertex<V> v2) throws InvalidVertexException {
+        VerticeD<V, E> vertice1 = checkVertice(v1);
+        VerticeD<V, E> vertice2 = checkVertice(v2);
+        boolean estado = false;
+        try {
+            if(!vertices.isEmpty()) {
+                //Decoro los vertices, 0 no visitado, 1 visitado
+                for(VerticeD<V,E> v : vertices){
+                    v.put("D", "0");
+                }
+                PositionList<Vertex<V>> list = new ListaDoblementeEnlazada<>();
+                estado = existeCaminoRec(vertice1, vertice2, list);
+            }
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
+        return estado;
+    }
+
+    /**
+     * Método recursivo para determinar si existe un camino entre dos vertices.
+     * Recorre la estructura mediante el algoritmo DFS(Depth-first search, búsqueda en profundidad).
+     * @param source vertice origen.
+     * @param target vertice destino
+     * @param list lista donde se almacena el camino.
+     * @return
+     */
+    private boolean existeCaminoRec(VerticeD<V,E> source, VerticeD<V,E> target, PositionList<Vertex<V>> list) {
+        try {
+            source.put("D", "1");
+            list.addLast(source);
+            if(source == target){
+                return true;
+            }
+            else {
+                for(Edge<E> e : source.getAdyacentes()) {
+                    VerticeD<V,E> aux = (VerticeD<V, E>) opposite(source, e);
+                    if(aux.get("D") == "0"){
+                        boolean encontre = existeCaminoRec(aux, target, list);
+                        if(encontre){
+                            return true;
+                        }
+                    }
+                }
+                list.remove(list.last());
+            }
+        } catch (InvalidKeyException | InvalidVertexException | InvalidEdgeException | EmptyListException |
+                 InvalidPositionException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
     private VerticeD<V,E> checkVertice(Vertex<V> v) throws InvalidVertexException {
         VerticeD<V,E> toReturn = (VerticeD<V, E>) v;
         if(toReturn == null){
@@ -173,4 +273,3 @@ public class GrafoListaAdyacentes<V,E> implements Graph<V,E> {
         return toReturn;
     }
 }
-

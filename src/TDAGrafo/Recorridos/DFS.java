@@ -20,6 +20,31 @@ public class DFS<V,E> {
 
     public DFS(){}
 
+    /**
+     * Determina si un grafo es conexo, mediante un recorrido DFS con vertices decorados.
+     * Un grafo es conexo si para todo par de vertices existe un camino entre ellos.
+     * @param g grafo
+     * @return TRUE si el grafo es conexo, FALSE caso contrario.
+     */
+    public boolean isConnected(Graph<V,E> g){
+        boolean estado = true;
+        try{
+            for(Vertex<V> v : g.vertices()){
+                v.put(ESTADO, NO_VISITADO);
+            }
+            dfs(g, g.vertices().iterator().next());
+            for (Vertex<V> v : g.vertices()){
+                if(v.get(ESTADO) == NO_VISITADO){
+                    estado = false;
+                    break;
+                }
+            }
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
+        return estado;
+    }
+
     public void dfsShell(Graph<V,E> g){
         try {
             //Marco todos los vertices como no visitados.
@@ -28,7 +53,7 @@ public class DFS<V,E> {
             }
             for(Vertex<V> v :g.vertices()){
                 if(v.get(ESTADO) == NO_VISITADO){
-                    dfsStack(g, v);
+                    dfs(g, v);
                 }
             }
         } catch (InvalidKeyException e) {
@@ -44,7 +69,7 @@ public class DFS<V,E> {
             for(Edge<E> a : g.incidentEdges(v)) {
                 Vertex<V> vertice = g.opposite(v, a);
                 if(vertice.get(ESTADO) == NO_VISITADO){
-                    dfsStack(g, vertice);
+                    dfs(g, vertice);
                 }
             }
         } catch (InvalidKeyException | InvalidVertexException | InvalidEdgeException e) {
