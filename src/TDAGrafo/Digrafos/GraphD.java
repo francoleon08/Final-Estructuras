@@ -1,5 +1,6 @@
-package TDAGrafo;
+package TDAGrafo.Digrafos;
 
+import TDAGrafo.VerticesDecorados.*;
 import TDAGrafo.Exception.*;
 
 /**
@@ -71,7 +72,7 @@ public interface GraphD<V,E> {
 	 * @throws InvalidVertexException si el v�rtice es inv�lido.
 	 */
 	public V replace(Vertex<V> v, V x) throws InvalidVertexException;
-	
+
 	/**
 	 * Inserta un nuevo v�rtice con r�tulo x.
 	 * @param x r�tulo del nuevo v�rtice
