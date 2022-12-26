@@ -2,6 +2,9 @@ package TDAMap;
 
 import java.util.LinkedList;
 
+/**
+* Hash Cerrado
+*/
 public class MapOpenAddressing<K,V> implements Map<K,V> {
     protected Entrada<K,V> [] buckets;
     protected Entrada<K,V> available;
